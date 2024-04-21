@@ -7,6 +7,7 @@ describe('ButtonComponent', () => {
   let fixture: ComponentFixture<ButtonComponent>;
   let debugEl: DebugElement;
   let el: HTMLElement;
+  let component: ButtonComponent;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -15,6 +16,7 @@ describe('ButtonComponent', () => {
     fixture = TestBed.createComponent(ButtonComponent);
     debugEl = fixture.debugElement;
     el = debugEl.nativeElement;
+    component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
@@ -23,20 +25,61 @@ describe('ButtonComponent', () => {
   });
 
   it('should apply proper CSS classes when appearance changes', () => {
-    debugEl.componentInstance.appearance = 'stroked';
+    component.appearance = 'stroked';
     fixture.detectChanges();
     expect(el.classList).toContain('stroked-button');
   });
 
   it("should show loader icon in 'loading' state", () => {
-    debugEl.componentInstance.loading = true;
+    fixture.componentRef.setInput('loading', true);
     fixture.detectChanges();
     let loader = el.querySelector('.loader');
     expect(loader).not.toBeNull();
 
-    debugEl.componentInstance.loading = false;
+    fixture.componentRef.setInput('loading', false);
     fixture.detectChanges();
     loader = el.querySelector('.loader');
     expect(loader).toBeNull();
   });
+  describe('Disabled state', () => {
+    it('should apply disabled attribute to component host', () => {
+      fixture.componentRef.setInput('disabled', true);
+      fixture.detectChanges();
+      expect(el.classList).toContain('disabled');
+      expect(el.getAttribute('disabled')).not.toBeNull();
+      expect(el.getAttribute('tabindex')).toBe('-1');
+    });
+    it('should prevent default action when button is disabled and clicked', () => {
+      fixture.componentRef.setInput('disabled', true);
+      fixture.detectChanges();
+      const clickEvent = new PointerEvent('click', {
+        cancelable: true,
+      });
+      debugEl.triggerEventHandler('click', clickEvent);
+      expect(clickEvent.defaultPrevented).toBe(true);
+    });
+  });
+  // describe('ButtonComponent (with TestHost)', () => {
+  //   @Component({
+  //     template: '<button dfButton>Test Button</button>',
+  //   })
+  //   class ButtonTestHost {}
+
+  //   let fixture: ComponentFixture<ButtonTestHost>;
+  //   let buttonDebugEl: DebugElement;
+  //   let buttonEl: HTMLElement;
+  //   let hostComponent: ButtonTestHost;
+  //   beforeEach(() => {
+  //     TestBed.configureTestingModule({
+  //       declarations: [ButtonTestHost],
+  //       imports: [ButtonModule],
+  //     });
+  //     fixture = TestBed.createComponent(ButtonTestHost);
+  //     buttonDebugEl = fixture.debugElement.query(By.directive(ButtonComponent));
+  //     buttonEl = buttonDebugEl.nativeElement;
+  //     hostComponent = fixture.componentInstance;
+  //     fixture.detectChanges();
+  //   });
+  //   it('', () => {});
+  // });
 });

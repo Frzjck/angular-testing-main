@@ -1,7 +1,16 @@
 import { Component, HostBinding, Input } from '@angular/core';
-import { toBooleanProperty } from '../../utils/type-coercion';
 import { CanDisableDirective } from '../../directives/can-disable/can-disable.directive';
 import { HasTabIndexDirective } from '../../directives/has-tab-index/has-tab-index.directive';
+import { toBooleanProperty } from '../../utils/type-coercion';
+
+export const BUTTON_CLASSES = {
+  solid: 'solid-button',
+  stroked: 'stroked-button',
+  dashed: 'dashed-button',
+} as const;
+
+export type ButtonAppearance = keyof typeof BUTTON_CLASSES;
+export type ButtonClasses = (typeof BUTTON_CLASSES)[ButtonAppearance];
 
 @Component({
   selector: 'button[dfButton],a[dfButton]',
