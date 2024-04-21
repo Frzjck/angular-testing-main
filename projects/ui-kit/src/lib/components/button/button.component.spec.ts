@@ -1,5 +1,6 @@
-import { DebugElement } from '@angular/core';
+import { Component, DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { ButtonComponent } from './button.component';
 import { ButtonModule } from './button.module';
 
@@ -59,27 +60,38 @@ describe('ButtonComponent', () => {
       expect(clickEvent.defaultPrevented).toBe(true);
     });
   });
-  // describe('ButtonComponent (with TestHost)', () => {
-  //   @Component({
-  //     template: '<button dfButton>Test Button</button>',
-  //   })
-  //   class ButtonTestHost {}
-
-  //   let fixture: ComponentFixture<ButtonTestHost>;
-  //   let buttonDebugEl: DebugElement;
-  //   let buttonEl: HTMLElement;
-  //   let hostComponent: ButtonTestHost;
-  //   beforeEach(() => {
-  //     TestBed.configureTestingModule({
-  //       declarations: [ButtonTestHost],
-  //       imports: [ButtonModule],
-  //     });
-  //     fixture = TestBed.createComponent(ButtonTestHost);
-  //     buttonDebugEl = fixture.debugElement.query(By.directive(ButtonComponent));
-  //     buttonEl = buttonDebugEl.nativeElement;
-  //     hostComponent = fixture.componentInstance;
-  //     fixture.detectChanges();
-  //   });
-  //   it('', () => {});
-  // });
 });
+
+describe('ButtonComponent (with TestHost)', () => {
+  it('should properly project content', () => {
+    const { buttonDebugEl } = setup();
+    const label = buttonDebugEl.query(By.css('[data-testingId="label"]'));
+    expect(label.nativeElement.innerText).toBe('Test Button');
+  });
+});
+
+function setup() {
+  @Component({
+    template: '<button [loading]="loading" dfButton>Test Button</button>',
+  })
+  class ButtonTestHost {
+    loading = false;
+  }
+
+  TestBed.configureTestingModule({
+    declarations: [ButtonTestHost],
+    imports: [ButtonModule],
+  });
+  let fixture = TestBed.createComponent(ButtonTestHost);
+  let buttonDebugEl = fixture.debugElement.query(By.directive(ButtonComponent));
+  let buttonEl = buttonDebugEl.nativeElement;
+  let hostComponent = fixture.componentInstance;
+  fixture.detectChanges();
+
+  return {
+    fixture,
+    buttonDebugEl,
+    buttonEl,
+    hostComponent,
+  };
+}

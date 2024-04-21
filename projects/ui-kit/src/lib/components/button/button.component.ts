@@ -15,7 +15,7 @@ export type ButtonClasses = (typeof BUTTON_CLASSES)[ButtonAppearance];
 @Component({
   selector: 'button[dfButton],a[dfButton]',
   template: `
-    <span class="button-label">
+    <span data-testingId="label" class="button-label">
       <ng-content></ng-content>
     </span>
     <span *ngIf="loading" class="loader"></span>
