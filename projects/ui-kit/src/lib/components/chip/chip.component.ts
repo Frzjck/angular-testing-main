@@ -16,7 +16,12 @@ import { HasTabIndexDirective } from '../../directives/has-tab-index/has-tab-ind
     <span data-testingId="chip-text" class="chip-text">
       <ng-content></ng-content>
     </span>
-    <i (click)="onClick()" *ngIf="removable" class="chip-remove-icon"></i>
+    <i
+      data-testingId="removeIcon"
+      (click)="onClick()"
+      *ngIf="removable"
+      class="chip-remove-icon"
+    ></i>
   `,
   styleUrls: ['./chip.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
